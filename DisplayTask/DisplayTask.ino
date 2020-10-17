@@ -82,22 +82,8 @@ void activer(int aFocusser) {
 
 void ajusterValeur(int valeurLue, int widget)
 {
-  int signe =(valeurLue < 0) ? -1 : (valeurLue > 0);
-  int increment = 0;
-  switch(widget)
-  {
-    case X :
-      // prise en compte MR et ML
-      increment = signe * (isActiveWidget(MR) ? 10 : 1);
-      break;
-    case Z : 
-      // prise en compte MR et ML
-      increment = signe * (isActiveWidget(MR) ? 10 : 1);
-      break;
-    case AV : 
-      // increment constant
-      increment = signe * 100;
-  }
+  int signe = (valeurLue < 0) ? -1 : (valeurLue > 0);
+  int increment = signe * (isActiveWidget(PAR_10) ? 10 : 1);;
   etat.ecran[widget].wDisplayValue.wValue.intValue += increment;
   etat.ecran[widget].wModified = true;  
 }
@@ -141,15 +127,15 @@ void HandleButtonChanged(EncoderButtonState state)
           break;
       }
       // Toujours en plus des autres commandes
-      if (isActiveWidget(MR))
+      if (isActiveWidget(PAR_10))
       {        
-          desactiver(MR);
-          activer(ML);
+          desactiver(PAR_10);
+          activer(PAR_1);
       } 
-      else if (isActiveWidget(ML))
+      else if (isActiveWidget(PAR_1))
       {
-          desactiver(ML);
-          activer(MR);
+          desactiver(PAR_1);
+          activer(PAR_10);
       }
     }
     else if (state == EncoderButtonState_AutoRepeat)
@@ -166,9 +152,16 @@ void HandleButtonChanged(EncoderButtonState state)
             activer(Z_LBL);
             etat.wWidgetActifndx = Z;
             break;
-          case Z :       
+          case Z:       
             desactiver(Z);
             desactiver(Z_LBL);
+            activer(MAN);
+            activer(MAN_LBL);
+            etat.wWidgetActifndx = MAN;
+            break;
+          case MAN:
+            desactiver(MAN);
+            desactiver(MAN_LBL);
             activer(AV);
             activer(AV_LBL);
             etat.wWidgetActifndx = AV;
