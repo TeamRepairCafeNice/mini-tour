@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <Task.h>
 #include "DisplayTask.h"
 #include "RotaryEncoderTask.h"
@@ -61,8 +62,7 @@ void commandeChangerOutil(int outil)
 
 void assignerValeur(int widget)
 {
-  
-  
+
 }
 ///////////////////////////////////////////////
 bool isActiveWidget(int i)
