@@ -12,6 +12,7 @@ struct EtatCNC
   WidgetID wWidgetActifndx;
   int valeurLue;
   int nbClicks;
+  bool *homed;
   int nbWidgets;
   Widget *ecran;
 };

@@ -1,3 +1,4 @@
+#define __ROTARY_ENCODER_TASK__
 // This assumes the encoder is in a circuit that pulls the pins high in the normal off state
 // and when then encoder is rotated the pin is pulled low
 //
