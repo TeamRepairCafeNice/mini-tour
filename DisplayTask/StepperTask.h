@@ -6,13 +6,14 @@ class StepperTask : public Task
 {
 public:
   // Constructor : nbPass any custom arguments you need
-  StepperTask(int id, int uSteps, int rpm, int pinDir, int pinStep) :
+  StepperTask(int id, int uSteps, int rpm, int pinDir, int pinStep, int pinLimit) :
     Task(MsToTaskTime(5)), 
     axe(id),
     nbMicroPasParTour(uSteps), // uSteps : si 200 nbPas/tr par quart de nbPas uSteps = 800 
     toursParMinute(rpm),
     dirPin(pinDir),
     stpPin(pinStep),
+    limitPin(pinLimit),
     moteurPaP(uSteps, pinDir, pinStep)
     { 
     };
@@ -59,6 +60,7 @@ private:
   int sauveToursParMinute = toursParMinute;
   int dirPin;
   int stpPin;
+  int limitPin;
   int muReversed = 0;
   Stepper moteurPaP;
   
@@ -78,32 +80,41 @@ private:
   virtual void OnUpdate(uint32_t deltaTime)
   {
     uint32_t deltaTimeMs = TaskTimeToMs(deltaTime);
-    /*
     logPromptValue("deltaTimeMs : ", deltaTimeMs);
     logPromptValue("toursParMinute: ", toursParMinute);
     logPromptValue("nbMicroPasParTour : ", nbMicroPasParTour);
-    */
-    int steps = sgn(toursParMinute) * max(1, abs(int((1.0 * toursParMinute * nbMicroPasParTour * deltaTimeMs) / 60000.0)));
-    if (muReversed > 0)
-    {
-       muReversed += steps;
-    } 
-    else if (muReversed < 0)
-    {
-      steps = muReversed;
-      muReversed = 0;
-      ajusteToursParMinute(sauveToursParMinute);   
-    }
     
-    // logPromptValue("Steps: ", steps);
-    moteurPaP.step(steps);
+    int steps = sgn(toursParMinute) * max(1, abs(int((1.0 * toursParMinute * nbMicroPasParTour * deltaTimeMs) / 60000.0)));
+//    if (muReversed > 0)
+//    {
+//       muReversed += steps;
+//    } 
+//    else if (muReversed < 0)
+//    {
+//      steps = muReversed;
+//      muReversed = 0;
+//      ajusteToursParMinute(sauveToursParMinute);   
+//    }
+    
+    logPromptValue("Steps: ", steps);
+    if (!isHome()) 
+    {
+      moteurPaP.step(steps);
+    }
   }
 
+// Utilitaires ///////////
   int sgn(int n) 
   {
     return (n < 0) ? -1 : (n > 0);
   }
 
+bool isHome()
+{
+  return (LOW == digitalRead(limitPin));
+}
+
+///////// Debug ///////////////////
   void logPrompt(char *text)
   { 
     if (Serial) 
