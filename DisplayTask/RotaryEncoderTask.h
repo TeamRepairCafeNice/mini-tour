@@ -24,7 +24,7 @@ public:
             uint8_t pinData,  // also refered to as B
             uint8_t pinButton,
             int32_t rotationValue = 0) :
-        Task(MsToTaskTime(5)), // check every five millisecond, 1-10 ms should be ok
+        Task(MsToTaskTime(3)), // check every five millisecond, 1-10 ms should be ok
         _buttonPin(pinButton),
         _clockPin(pinClock),
         _dataPin(pinData),

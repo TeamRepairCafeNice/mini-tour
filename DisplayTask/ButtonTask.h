@@ -15,7 +15,7 @@ public:
     typedef void(*action)(ButtonState state);
 
     ButtonTask(action function, uint8_t pin) :
-        Task(MsToTaskTime(6)), // check every three millisecond, 1-10 ms should be ok
+        Task(MsToTaskTime(3)), // check every three millisecond, 1-10 ms should be ok
         _buttonPin(pin),
         _callback(function)
     { 

@@ -3,30 +3,23 @@
 
 #define SERIAL_BAUDS        (57600)
 #define X                   (1)
-#define STEPS               (800)
+#define STEPS               (200)
 #define MU_STEPS            (32) 
 #define AVANCE_MM_PAR_MIN   (80)
 #define PAS_MM_PAR_TOUR     (2.0)
 
 // PINS
-#define PIN_BUTTON          (2) // labeled as SW
-#define PIN_DATA            (3) // labeled either as DT or as B
-#define PIN_CLOCK           (4) // labeled either as CLK or as A
-#define PIN_DIR_X           (5)
-#define PIN_STEP_X          (6)
-#define PIN_X_LIMIT         (7)
+#define PIN_BUTTON          (23) // labeled as SW
+#define PIN_DATA            (25) // labeled either as DT or as B
+#define PIN_CLOCK           (27) // labeled either as CLK or as A
+#define PIN_DIR_X           (29)
+#define PIN_STEP_X          (31)
+#define PIN_X_LIMIT         (18)
 #define INC_SPEED           (10)
 
-// Encoder
-#define ClockPin 4  // labeled either as CLK or as A
-#define DataPin 3   // labeled either as DT or as B
-#define ButtonPin 2 // labeled as SW
-
-
 // Choix de la mise en page
-#include "modeClassique.h"
+#include "modeManuel.h"
 DisplayTask affichage(&etat); // Création de la tâche
-
 
 ///////// The Boss /////////////////////
 TaskManager taskManager;
@@ -38,7 +31,6 @@ void setup()
   taskManager.StartTask(&RotaryTask);
 #ifdef __MODE_MANUEL__
   taskManager.StartTask(&xStepperTask);
-  taskManager.StartTask(&xLimitDetectionTask);
 #endif
 }
 

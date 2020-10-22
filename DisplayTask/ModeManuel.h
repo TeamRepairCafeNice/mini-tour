@@ -23,9 +23,6 @@ RotaryEncoderTask RotaryTask(HandleRotationChanged,
 #ifndef __STEPPER_TASK__
 #include "StepperTask.h"
 #endif
-#ifndef __BUTTON_TASK__
-#include "ButtonTask.h"
-#endif
 ///////// Debug ///////////////
 void logPrompt(char *text)
 { 
@@ -48,13 +45,6 @@ float avance = AVANCE_MM_PAR_MIN;
 float pas = PAS_MM_PAR_TOUR;
 int vitesseRotation = int((avance + 0.5) / pas);
 int nouvelleVitesse = vitesseRotation; 
-void HandleXLimitButtonChanged(ButtonState state);
-/// Détecteur fin de course
-
-ButtonTask xLimitDetectionTask(
-  HandleXLimitButtonChanged,
-  PIN_X_LIMIT
-);
 
 // Axe X
 StepperTask xStepperTask(
@@ -62,7 +52,8 @@ StepperTask xStepperTask(
   STEPS * MU_STEPS, 
   vitesseRotation, 
   PIN_DIR_X, 
-  PIN_STEP_X
+  PIN_STEP_X,
+  PIN_X_LIMIT // Fin de course
 ); 
 ////////// Commandes //////////
 void commandeStopX()
@@ -75,10 +66,6 @@ void commandeStopZ()
   logPrompt(">>>>>>>>>>> Z stoppé");
 }
 ///////////////////////////////
-bool isHome(int axis)
-{
-  return etat.homed[axis - 1];
-}
 bool isActiveWidget(int i)
 {
   return etat.ecran[i].wEditable && etat.ecran[i].wFocus;
@@ -217,6 +204,7 @@ void ajusterValeur(int valeurLue, int *vitesse)
   int increment = signe * (isActiveWidget(DEPL_1) ? 10 : 1);
   (*vitesse) += increment;
   logPromptValue("Nouvelle vitesse RPM: ", *vitesse);
+  xStepperTask.ajusteToursParMinute(*vitesse);
 }
 
 void HandleRotationChanged(int8_t rotationDelta)
@@ -232,13 +220,4 @@ void HandleRotationChanged(int8_t rotationDelta)
     etat.valeurLue = abs(valeur);
   }
   ajusterValeur(etat.valeurLue, &vitesseRotation);
-}
-
-//// ButtonTask ////////////
-void HandleXLimitButtonChanged(ButtonState state)
-{
-  if(ButtonState_Pressed == state)
-  {
-    etat.homed[0] = true;
-  }
 }
