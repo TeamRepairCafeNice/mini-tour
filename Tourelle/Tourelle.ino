@@ -8,9 +8,12 @@
 
 // It seems that TB6600 requires to double the original steps number
 // So 200 steps by 1/4 microsteps should require 800 pulses, 
-// but works accurately only if defined as 1600
+// but rotates accurately only if moved by 1600 pulses.
+// With original Sanyo Step Syn 103G770 and TB6600
+// OFF OFF OFF should be 32 microsteps and 6400 for a complete revolution,
+// However 3200 is showing the accurate linear move given the pitch of the lead screw
 
-#define STEPS         1600
+#define STEPS         3200
 #define RPM           500
 #define GEAR_RATIO    2.5
 #define QUARTER_TURN  quarterTurn
@@ -62,8 +65,9 @@ void steps(int n)
     delayMicroseconds(PULSE_MICROS);
     digitalWrite(PIN_STEP,LOW);
     delayMicroseconds(PULSE_MICROS);
-    Serial.println(i + 1);
+    // Serial.println(i + 1);
   }
+ delay(PULSE_MICROS);
 }
 
 int digitalButtonRead(int pinNum)
