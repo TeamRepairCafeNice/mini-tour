@@ -1,14 +1,13 @@
 
-#define PIN_CW        2
-#define PIN_CCW       3
-#define PIN_STEP      23
-#define PIN_DIR       22
-#define PIN_STOP      53
-#define PIN_ENABLE    7
+#define PIN_STOP      2
+#define PIN_DIR       3
+#define PIN_STEP      4
+#define PIN_CW        5
+#define PIN_CCW       6
+// Optionnel
+// #define PIN_ENABLE    7
 
-// It seems that TB6600 requires to double the original steps number
-// So 200 steps by 1/4 microsteps should require 800 pulses, 
-// but rotates accurately only if moved by 1600 pulses.
+// It seems that TB6600 requires different steps number
 // With original Sanyo Step Syn 103G770 and TB6600
 // OFF OFF OFF should be 32 microsteps and 6400 for a complete revolution,
 // However 3200 is showing the accurate linear move given the pitch of the lead screw
@@ -19,7 +18,7 @@
 #define QUARTER_TURN  quarterTurn
 #define PULSE_MICROS  50
 
-#define BAUDS         57600
+#define BAUDS         9600
 
 float stepCalc = 0.0;
 int quarterTurn = 0;
@@ -37,12 +36,14 @@ void setup()
   quarterTurn = floor(stepCalc / 4.0);
   Serial.print(QUARTER_TURN);
   Serial.println(" steps.");
-  //steps(STEPS);
   steps(-STEPS);
 }
 void enableMotor(bool on) 
 {
+  // Code Optionnel pour activer le moteur
+  // digitalWrite(PIN_ENABLE, (on) ? LOW : HIGH);
 }
+
 void turnQuarterRight()
 {
   Serial.println("1/4 horaire");
@@ -56,6 +57,8 @@ void turnQuarterLeft()
   steps(-QUARTER_TURN);
 }
 
+// Execution de n pas ou micro-pas
+// PULSE_MICROS minimum 2µs, ici 50 µs
 void steps(int n)
 {
   digitalWrite(PIN_DIR,(n > 0) ? LOW : HIGH);
@@ -65,11 +68,11 @@ void steps(int n)
     delayMicroseconds(PULSE_MICROS);
     digitalWrite(PIN_STEP,LOW);
     delayMicroseconds(PULSE_MICROS);
-    // Serial.println(i + 1);
   }
  delay(PULSE_MICROS);
 }
 
+// Lecture anti-rebond
 int digitalButtonRead(int pinNum)
 {
   int state0 = LOW, state1 = HIGH;
@@ -80,6 +83,7 @@ int digitalButtonRead(int pinNum)
   }
   return state0;
 }
+
 void loop() 
 {
   if(LOW == digitalButtonRead(PIN_CW))
