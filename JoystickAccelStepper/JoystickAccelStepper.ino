@@ -3,9 +3,11 @@
 #define X            1
 #define PIN_DIR      3
 #define PIN_STEP     4
+#define PIN_STOP     2
 #define DEAD_ZONE    25
 #define NB_SAMPLES   50
-#define SPEED_BOOST  5
+#define TEMPO_MILLIS 10
+#define SPEED_BOOST  100
 
 AccelStepper stepper(X, PIN_STEP, PIN_DIR); 
 
@@ -24,12 +26,13 @@ void setup()
   //----------------------------------------------------------------------------    
   //PINS
   pinMode(Analog_X_pin, INPUT);
+  pinMode(PIN_STOP, INPUT_PULLUP);
   //----------------------------------------------------------------------------  
   InitialValues(); //averaging the values of the 3 analog pins (values from potmeters)
   //----------------------------------------------------------------------------  
   //Stepper parameters
   //setting up some default values for maximum speed and maximum acceleration
-  stepper.setMaxSpeed(5000); //SPEED = Steps / second  
+  stepper.setMaxSpeed(SPEED_BOOST * 1023); //SPEED = Steps / second  
   stepper.setAcceleration(1000); //ACCELERATION = Steps /(second)^2    
   stepper.setSpeed(500);
   delay(500);
@@ -38,12 +41,16 @@ void setup()
 void loop()
 {
   ReadAnalog();  
+  if (LOW == digitalRead(PIN_STOP))
+  {
+     stepper.setSpeed(0); // STOP !
+  }
   stepper.runSpeed(); //step the motor (this will step the motor by 1 step at each loop indefinitely)
 }
 
 void ReadAnalog()
 {
-  //Reading the 3 potentiometers in the joystick: x, y and r.
+  //Reading the potentiometer in the joystick: x.
   Analog_X = analogRead(Analog_X_pin);  
 
   //if the value is DEAD_ZONE "value away" from the average (midpoint), we allow the update of the speed
@@ -68,7 +75,7 @@ void InitialValues()
   for(int i = 0; i<NB_SAMPLES; i++)
   {
      tempX += analogRead(Analog_X_pin);  
-     delay(10); //allowing a little time between two readings
+     delay(TEMPO_MILLIS); //allowing a little time between two readings
   }
   //----------------------------------------------------------------------------  
   Analog_X_AVG = tempX/NB_SAMPLES; 
