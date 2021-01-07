@@ -12,7 +12,7 @@
 // OFF OFF OFF should be 32 microsteps and 6400 for a complete revolution,
 // However 3200 is showing the accurate linear move given the pitch of the lead screw
 
-#define STEPS         3200
+#define STEPS         6400
 #define RPM           500
 #define GEAR_RATIO    2.5
 #define QUARTER_TURN  quarterTurn
@@ -54,7 +54,6 @@ void turnQuarterLeft()
 {
   Serial.println("1/4 anti-horaire");
   enableMotor(true);
-  steps(-QUARTER_TURN);
 }
 
 // Execution de n pas ou micro-pas
