@@ -1,6 +1,5 @@
 // AccelStepper library
 #include <AccelStepper.h> 
-#define X            1
 #define PIN_DIR      3
 #define PIN_STEP     4
 #define PIN_STOP     2
@@ -9,7 +8,7 @@
 #define TEMPO_MILLIS 10
 #define SPEED_BOOST  100
 
-AccelStepper stepper(X, PIN_STEP, PIN_DIR); 
+AccelStepper stepper(AccelStepper::DRIVER, PIN_STEP, PIN_DIR); 
 
 
 //Pins
