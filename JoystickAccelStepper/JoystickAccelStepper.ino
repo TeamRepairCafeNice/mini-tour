@@ -6,7 +6,10 @@
 #define DEAD_ZONE    25
 #define NB_SAMPLES   50
 #define TEMPO_MILLIS 10
-#define SPEED_BOOST  100
+// SPEED_BOOST ne doit pas dépasser 32 pour éviter 
+// l'Integer Overflow qui change la direction du moteur
+// => Même cause que l'accident du vol 501 d'Ariane 5
+#define SPEED_BOOST  32
 
 AccelStepper stepper(AccelStepper::DRIVER, PIN_STEP, PIN_DIR); 
 
