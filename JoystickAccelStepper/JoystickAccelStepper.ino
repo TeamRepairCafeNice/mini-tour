@@ -1,3 +1,4 @@
+#include <Arduino.h>
 // AccelStepper library
 #include <AccelStepper.h> 
 #define PIN_DIR      3
