@@ -1,7 +1,7 @@
 /**
  * Prototype de banc de test du tour Jeulin 700 CE
  * Jean-Pierre de SOZA - 09/2020
- * V2.0.1 - Septembre 2020 - Adoption des conventions CNC tour avec seulement X et Z
+ * V2.0.1 - Septembre 2020 - Adoption des conventions CNC tour avec seulement X et Z, avec Y = 0 en 2D.
  */
 // Constantes pour désigner les axes
 #define NOP (0)
